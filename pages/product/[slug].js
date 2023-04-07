@@ -1,8 +1,25 @@
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 
-const Post = () => {
+const Post = ({addToCart}) => {
   const router = useRouter()
   const { slug } = router.query
+
+  const [pin, setPin] = useState();
+  const [service, setService] = useState();
+  const checkServiceAvailability =async()=>{
+    let pins = await fetch('http://localhost:3000/api/pincode')
+    let pinJson = await pins.json()
+    if(pinJson.includes(parseInt(pin))){
+      setService(true)
+    }
+    else{
+      setService(false)
+    }
+  }
+  const onChangePin = (e)=>{
+    setPin(e.target.value)
+  }
 
   return <>
     <section className="text-gray-600 body-font overflow-hidden">
@@ -10,8 +27,8 @@ const Post = () => {
     <div className="lg:w-4/5 mx-auto flex flex-wrap">
       <img alt="ecommerce" className="lg:w-1/2 w-full lg:h-auto px-24 object-cover object-center rounded" src="https://m.media-amazon.com/images/I/61wy1MD4KKL._AC_UL320_.jpg"/>
       <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
-        <h2 className="text-sm title-font text-gray-500 tracking-widest">BRAND NAME</h2>
-        <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">The Catcher in the Rye</h1>
+        <h2 className="text-sm title-font text-gray-500 tracking-widest">COZYCLOTH</h2>
+        <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">WRAP IN COMFORT(XL/Blue)</h1>
         <div className="flex mb-4">
           <span className="flex items-center">
             <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-gray-500" viewBox="0 0 24 24">
@@ -75,14 +92,26 @@ const Post = () => {
           </div>
         </div>
         <div className="flex">
-          <span className="title-font font-medium text-2xl text-gray-900">Rs.58.00</span>
-          <button className="flex ml-16 text-white bg-gray-500 border-0 py-2 px-6 focus:outline-none hover:bg-gray-600 rounded">Add to Cart</button>
+          <span className="title-font font-medium text-2xl text-gray-900">₹599.00</span>
+          <button className="flex ml-4 text-white bg-gray-500 border-0 px-1 items-center focus:outline-none hover:bg-gray-600 rounded">Buy Now</button>
+          <button onClick={()=>{addToCart(slug, 1,499, 'wrap in cozy(XL, Black)','XL','Black') } } className="flex ml-4 text-white bg-gray-500 border-0 px-1 items-center focus:outline-none hover:bg-gray-600 rounded">Add to Cart</button>
           <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
             <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
               <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
             </svg>
           </button>
         </div>
+        <div className="pin mt-6 flex space-x-2 text-sm">
+          <input onChange ={onChangePin} className='border-gray-400 px-2 border-2 rounded-md' placeholder='Enter your pincode' type="text" />
+          <button onClick={checkServiceAvailability} className=' text-white bg-gray-500 border-0 py-2 px-6 focus:outline-none hover:bg-gray-600 rounded'>Check</button>
+        </div>
+        {!service && service != null && <div className="text-red-700">
+          Sorry! We do not deliver to this pincode yet
+        </div>}
+        {service && service != null && <div className="text-green-700">
+          yes! This pincode is serviceable
+        </div>}
+
       </div>
     </div>
   </div>

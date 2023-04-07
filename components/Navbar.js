@@ -6,7 +6,8 @@ import { AiFillCloseCircle, AiOutlineMinusSquare, AiOutlinePlusSquare } from 're
 import {MdShoppingCartCheckout} from 'react-icons/md'
 
 
-const Navbar = () => {
+const Navbar = ({cart, addToCart, removeFromCart, clearCart, subTotal}) => {
+  console.log(cart, addToCart, removeFromCart, clearCart, subTotal)
   const toggleCart = ()=>{
     if(ref.current.classList.contains('translate-x-full')){
       ref.current.classList.remove('translate-x-full')
@@ -19,7 +20,7 @@ const Navbar = () => {
   }
   const ref = useRef();
   return (
-    <div className='flex flex-col md:flex-row md:justify-start justify-center items-center my-2 shadow-md'>
+    <div className='flex flex-col md:flex-row md:justify-start justify-center items-center my-2 shadow-md sticky top-0 z-10 bg-white'>
       <div className="logo mx-5">
         <Link href={'/'}><Image width={200} height={40} src="/logo.png" alt="" /></Link>
       </div>
@@ -34,44 +35,22 @@ const Navbar = () => {
       <div onClick={toggleCart} className="cart absolute top-4 right-0 mx-5 cursor-pointer">
         <TiShoppingCart className='text-xl md:text-3xl'/>
       </div>
-      <div ref = {ref} className="w-72 sideCart absolute top-0 right-0 bg-gray-100 px-10 py-10 transform transition-transform translate-x-full">
+      <div ref = {ref} className={`w-72 sideCart absolute top-0 right-0 bg-gray-100 px-10 py-10 transform transition-transform ${Object.keys(cart).length !== 0 ? 'translate-x-0': 'translate-x-full'} h-[100vh] z-50`}>
         <div className="font-bold text-x text-center">Shopping Cart</div>
         <span onClick={toggleCart} className='absolute top-2 right-2 cursor-pointer text-2xl'><AiFillCloseCircle/></span>
         <ol className= 'list-decimal item'>
-          <li>
+          {Object.keys(cart).length==0 && <div className='my-4'>Your cart is Empty!</div>}
+          {Object.keys(cart).map((k)=>{return < li key = {k}>
             <div className="item flex my-5">
-              <div className="w-2/3 font-semibold">Tshirts-Wrap yourself in cozy</div>
-              <div className="flex font-semibold items-center justify-center w-1/3 space-x-4 text-lg"><AiOutlineMinusSquare className='cursor-pointer'/><span className='mx-2'>1</span><AiOutlinePlusSquare className='cursor-pointer'/></div>
+              <div className="w-2/3 font-semibold">{cart[k].name}</div>
+              <div className="flex font-semibold items-center justify-center w-1/3 space-x-4 text-lg"><AiOutlineMinusSquare onClick={()=>{removeFromCart(k, 1, cart[k].price, cart[k].name,cart[k].size, cart[k].variant)}} className='cursor-pointer'/><span className='mx-2'>{cart[k].qty}</span><AiOutlinePlusSquare onClick={()=>{addToCart(k, 1, cart[k].price, cart[k].name,cart[k].size, cart[k].variant)}} className='cursor-pointer'/></div>
             </div>
-          </li>
-          <li>
-            <div className="item flex my-5">
-              <div className="w-2/3 font-semibold">Tshirts-Wrap yourself in cozy</div>
-              <div className="flex font-semibold items-center justify-center w-1/3 space-x-4 text-lg"><AiOutlineMinusSquare className='cursor-pointer'/><span className='mx-2'>1</span><AiOutlinePlusSquare className='cursor-pointer'/></div>
-            </div>
-          </li>
-          <li>
-            <div className="item flex my-5">
-              <div className="w-2/3 font-semibold">Tshirts-Wrap yourself in cozy</div>
-              <div className="flex font-semibold items-center justify-center w-1/3 space-x-4 text-lg"><AiOutlineMinusSquare className='cursor-pointer'/><span className='mx-2'>1</span><AiOutlinePlusSquare className='cursor-pointer'/></div>
-            </div>
-          </li>
-          <li>
-            <div className="item flex my-5">
-              <div className="w-2/3 font-semibold">Tshirts-Wrap yourself in cozy</div>
-              <div className="flex font-semibold items-center justify-center w-1/3 space-x-4 text-lg"><AiOutlineMinusSquare className='cursor-pointer'/><span className='mx-2'>1</span><AiOutlinePlusSquare className='cursor-pointer'/></div>
-            </div>
-          </li>
-          <li>
-            <div className="item flex my-5">
-              <div className="w-2/3 font-semibold">Tshirts-Wrap yourself in cozy</div>
-              <div className="flex font-semibold items-center justify-center w-1/3 space-x-4 text-lg"><AiOutlineMinusSquare className='cursor-pointer'/><span className='mx-2'>1</span><AiOutlinePlusSquare className='cursor-pointer'/></div>
-            </div>
-          </li>
+          </li>})} 
         </ol>
+        <div className='font-bold my-3'>Subtotal: ₹{subTotal}</div>
         <div className="flex px-1">
-          <button className="flex mr-3 p-2 text-white bg-gray-500 border-0 my-2 focus:outline-none hover:bg-gray-600 rounded text-md  items-center"><MdShoppingCartCheckout className='m-1'/>Checkout</button>
-          <button className="flex  p-2 text-white bg-gray-500 border-0 my-2 focus:outline-none hover:bg-gray-600 rounded text-md items-center">Clear Cart</button>
+          <Link href={'/checkout'}><button className="flex mr-6 px-1 text-white bg-gray-500 border-0  focus:outline-none hover:bg-gray-600 rounded text-md  items-center"><MdShoppingCartCheckout className='m-1'/>Checkout</button></Link>
+          <button onClick={clearCart} className="flex px-1  text-white bg-gray-500 border-0  focus:outline-none hover:bg-gray-600 rounded text-md items-center">Clear Cart</button>
         </div>
       </div>
     </div>
