@@ -26,24 +26,24 @@ const Navbar = ({cart, addToCart, removeFromCart, clearCart, subTotal}) => {
       </div>
       <div className="nav">
         <ul className='flex items-center space-x-8 font-bold md:text-md'>
-          <Link legacyBehavior href={'/tshirts'}><a><li>Tshirts</li></a></Link>
-          <Link legacyBehavior href={'/hoodies'}><a><li>Hoodies</li></a></Link>
-          <Link legacyBehavior href={'/stickers'}><a><li>Stickers</li></a></Link>
-          <Link legacyBehavior href={'/mugs'}><a><li>Mugs</li></a></Link>
-        </ul>
+          <Link legacyBehavior href={'/tshirts'}><a><li className='hover:text-gray-500'>  Tshirts</li></a></Link>
+          <Link legacyBehavior href={'/hoodies'}><a><li className='hover:text-gray-500'>  Hoodies</li></a></Link>
+          <Link legacyBehavior href={'/stickers'}><a><li className='hover:text-gray-500'>  Stickers</li></a></Link>
+          <Link legacyBehavior href={'/mugs'}><a><li className='hover:text-gray-500'>  Mugs</li></a></Link>
+        </ul> 
       </div>
       <div className="cart absolute top-1 right-0 mx-5 cursor-pointer flex ">
         <Link href={'/login'} ><MdAccountCircle className='text-xl md:text-3xl'/></Link>
         <TiShoppingCart onClick={toggleCart}  className='text-xl md:text-3xl'/>
       </div>
-      <div ref = {ref} className={`w-72 sideCart absolute top-0 right-0 bg-gray-100 px-10 py-10 transform transition-transform ${Object.keys(cart).length !== 0 ? 'translate-x-0': 'translate-x-full'} h-[100vh] z-50`}>
+      <div ref = {ref} className={`w-72 sideCart overflow-y-scroll absolute top-0 right-0 bg-gray-100 px-10 py-10 transform transition-transform ${Object.keys(cart).length !== 0 ? 'translate-x-0': 'translate-x-full'} h-[100vh] z-50`}>
         <div className="font-bold text-x text-center">Shopping Cart</div>
         <span onClick={toggleCart} className='absolute top-2 right-2 cursor-pointer text-2xl'><AiFillCloseCircle/></span>
         <ol className= 'list-decimal item'>
           {Object.keys(cart).length==0 && <div className='my-4'>Your cart is Empty!</div>}
           {Object.keys(cart).map((k)=>{return < li key = {k}>
             <div className="item flex my-5">
-              <div className="w-2/3 font-semibold">{cart[k].name}</div>
+              <div className="w-2/3 font-semibold">{cart[k].name}({cart[k].size}/{cart[k].variant}) </div>
               <div className="flex font-semibold items-center justify-center w-1/3 space-x-4 text-lg"><AiOutlineMinusSquare onClick={()=>{removeFromCart(k, 1, cart[k].price, cart[k].name,cart[k].size, cart[k].variant)}} className='cursor-pointer'/><span className='mx-2'>{cart[k].qty}</span><AiOutlinePlusSquare onClick={()=>{addToCart(k, 1, cart[k].price, cart[k].name,cart[k].size, cart[k].variant)}} className='cursor-pointer'/></div>
             </div>
           </li>})} 
