@@ -9,6 +9,7 @@ const Tshirts = ({ products }) => {
       <section className="text-gray-600 body-font">
         <div className="container px-5 py-24 mx-auto">
           <div className="flex flex-wrap -m-4 justify-center ">
+            {Object.keys(products).length === 0 && <p>Sorry all the Tshirts are currently out of Stock. New stocks are comming soon !!</p>}
             {Object.keys(products).map((item) => {
               return <Link key={products[item]._id} legacyBehavior href={`/product/${products[item].slug}`}>
                 <div className="lg:w-1/5 md:w-1/2 p-4 w-full cursor-pointer shadow-lg m-4">
@@ -21,7 +22,7 @@ const Tshirts = ({ products }) => {
                   </a>
                   <div className="mt-4 text-center">
                     <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-                      Tshirts
+                     Tshirts
                     </h3>
                     <h2 className="text-gray-900 title-font text-lg font-medium">
                       {products[item].title}
@@ -57,29 +58,30 @@ export async function getServerSideProps(context) {
     await mongoose.connect(process.env.MONGO_URI);
   }
 
-  let products = await Product.find({category: 'tshirts'});
-  let tshirts = {}
+  let products = await Product.find({category:  'tshirts'});
+  let hoods = {}
   for(let item of products){
-    if(item.title in tshirts){
-      if(!tshirts[item.title].color.includes(item.color) && item.availableQty > 0){
-        tshirts[item.title].color.push(item.color)
+    if(item.title in hoods){
+      if(!hoods[item.title].color.includes(item.color) && item.availableQty > 0){
+        hoods[item.title].color.push(item.color)
       }
-      if(!tshirts[item.title].size.includes(item.size) && item.availableQty > 0){
-        tshirts[item.title].size.push(item.size)
+      if(!hoods[item.title].size.includes(item.size) && item.availableQty > 0){
+        hoods[item.title].size.push(item.size)
       }
     }
     else{
-      tshirts[item.title] = JSON.parse(JSON.stringify(item))
-      tshirts[item.title].color = []
-      tshirts[item.title].size = []
+      hoods[item.title] = JSON.parse(JSON.stringify(item))
+      hoods[item.title].color = []
+      hoods[item.title].size = []
       if(item.availableQty > 0){
-        tshirts[item.title].color = [item.color]
-        tshirts[item.title].size = [item.size]
+        hoods[item.title].color = [item.color]
+        hoods[item.title].size = [item.size]
       }
     }
   }
+  console.log(hoods)
   return {
-    props: { products: JSON.parse(JSON.stringify(tshirts)) }, // will be passed to the page component as props
+    props: { products: JSON.parse(JSON.stringify(hoods)) }, // will be passed to the page component as props
   };
 }
 export default Tshirts;
