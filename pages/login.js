@@ -1,9 +1,50 @@
+import React, { useState } from 'react'
 import Link from "next/link";
-import React from "react";
+import { useRouter } from 'next/router';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
+  const router = useRouter();
+  const [email, setEmail] = useState()
+  const [password, setPassword] = useState()
+  
+  const handleChange = (e)=>{
+    if(e.target.name == 'email'){
+      setEmail(e.target.value);
+    }
+    else if(e.target.name == 'password'){
+      setPassword(e.target.value);
+    }
+  }
+  const handleSubmit = async (e)=>{
+    e.preventDefault();
+    const data = {email, password}
+    
+    let res = await fetch("http://localhost:3000/api/login" , {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    let response = await res.json()
+    console.log(response);
+    setEmail("");
+    setPassword("");
+    if(response.success){
+      toast.success('You are successfully logged in', { position: "top-left", autoClose: 1000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "light",});
+      setTimeout(()=>{
+        router.push('http://localhost:3000')
+      },1000)
+    }
+    else{
+      toast.error(response.error, { position: "top-left", autoClose: 1000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "light",});
+    }
+  }
   return (
     <div>
+      <ToastContainer position="bottom-left" autoClose={1000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
       <div className="flex min-h-full items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
   <div className="w-full max-w-md space-y-8">
     <div>
@@ -14,16 +55,16 @@ const Login = () => {
         <Link legacyBehavior href={'/signup'}><a href="#" className="font-medium text-gray-600 hover:text-gray-500"> SignUp </a></Link>
       </p>
     </div>
-    <form className="mt-8 space-y-6" action="#" method="POST">
+    <form onSubmit={handleSubmit} className="mt-8 space-y-6" method="POST">
       <input type="hidden" name="remember" value="true"/>
       <div className="-space-y-px rounded-md shadow-sm">
         <div>
-          <label htmlFor="email-address" className="sr-only">Email address</label>
-          <input id="email-address" name="email" type="email" autoComplete="email" required className="relative block w-full rounded-t-md border-0 px-1.5 py-1,5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6" placeholder="Email address"/>
+          <label htmlFor="email" className="sr-only">Email address</label>
+          <input value={email} onChange={handleChange} id="email" name="email" type="email" autoComplete="email" required className="relative block w-full rounded-t-md border-0 px-1.5 py-1,5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6" placeholder="Email address"/>
         </div>
         <div>
           <label htmlFor="password" className="sr-only">Password</label>
-          <input id="password" name="password" type="password" autoComplete="current-password" required className="relative block w-full rounded-b-md border-0 px-1.5 py-1,5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6" placeholder="Password"/>
+          <input value={password} onChange={handleChange} id="password" name="password" type="password" autoComplete="current-password" required className="relative block w-full rounded-b-md border-0 px-1.5 py-1,5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6" placeholder="Password"/>
         </div>
       </div>
 

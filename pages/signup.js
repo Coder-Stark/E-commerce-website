@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import Link from "next/link";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Signup = () => {
   const [name, setName] = useState()
@@ -11,13 +13,14 @@ const Signup = () => {
       setName(e.target.value);
     }
     else if(e.target.name == 'email'){
-      setName(e.target.value);
+      setEmail(e.target.value);
     }
     else if(e.target.name == 'password'){
-      setName(e.target.value);
+      setPassword(e.target.value);
     }
   }
   const handleSubmit = async (e)=>{
+    //use to not reload the page
     e.preventDefault();
     const data = {name, email, password}
     
@@ -33,11 +36,14 @@ const Signup = () => {
     setName("");
     setEmail("");
     setPassword("");
+    toast.success('Your Account has been created', { position: "top-left", autoClose: 1000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "light", });
   }
   return (
     <div>
+      <ToastContainer position="bottom-left" autoClose={1000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light"
+      />
       <div className="flex min-h-full items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-  <div className="w-full max-w-md space-y-8">
+        <div className="w-full max-w-md space-y-8">
     <div>
       <img className="mx-auto h-12 w-auto" src="/cozyclothscircular.png" alt="Your Company"/>
       <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign up For an account</h2>
@@ -70,7 +76,7 @@ const Signup = () => {
               <path fillRule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clipRule="evenodd" />
             </svg>
           </span>
-          Sign in
+          Sign Up
         </button>
       </div>
     </form>
