@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { TiShoppingCart } from 'react-icons/ti';
@@ -6,7 +6,9 @@ import { AiFillCloseCircle, AiOutlineMinusSquare, AiOutlinePlusSquare } from 're
 import {MdShoppingCartCheckout ,MdAccountCircle} from 'react-icons/md'
 
 
-const Navbar = ({cart, addToCart, removeFromCart, clearCart, subTotal}) => {
+const Navbar = ({Logout, user ,cart, addToCart, removeFromCart, clearCart, subTotal}) => {
+  const [dropdown , setDropdown] = useState(false);
+
   console.log(cart, addToCart, removeFromCart, clearCart, subTotal)
   const toggleCart = ()=>{
     if(ref.current.classList.contains('translate-x-full')){
@@ -21,7 +23,7 @@ const Navbar = ({cart, addToCart, removeFromCart, clearCart, subTotal}) => {
   const ref = useRef();
   return (
     <div className='flex flex-col md:flex-row md:justify-start justify-center items-center my-2 shadow-md sticky top-0 z-10 bg-white'>
-      <div className="logo mx-5">
+      <div className="logo mr-auto md:mx-5">
         <Link href={'/'}><Image width={200} height={40} src="/logo.png" alt="" /></Link>
       </div>
       <div className="nav">
@@ -32,10 +34,23 @@ const Navbar = ({cart, addToCart, removeFromCart, clearCart, subTotal}) => {
           <Link legacyBehavior href={'/mugs'}><a><li className='hover:text-gray-500'>  Mugs</li></a></Link>
         </ul> 
       </div>
-      <div className="cart absolute top-1 right-0 mx-5 cursor-pointer flex ">
-        <Link href={'/login'} ><MdAccountCircle className='text-xl md:text-3xl'/></Link>
+      <div className="cart items-center absolute top-1 right-0 mx-5 cursor-pointer flex ">
+        <a onMouseOver={()=>{setDropdown(true)}} onMouseLeave={()=>{setDropdown(false)}} >
+      {dropdown && <div onMouseOver={()=>{setDropdown(true)}} onMouseLeave={()=>{setDropdown(false)}} className="absolute right-5 bg-gray-600 top-7 rounded-md px-5 w-36">
+        <ul>
+          <Link href={"/myaccount"}><li className='py-1 hover:text-white textsm'>My Account</li></Link>
+          <Link href={"/orders"}><li className='py-1 hover:text-white textsm'>Orders</li></Link>
+          <li onClick={Logout} className='py-1 hover:text-white textsm'>LogOut</li>
+        </ul>
+      </div>}
+      {user.value && <MdAccountCircle className='text-xl md:text-3xl'/>}
+      </a>
+        {!user.value && <Link href={'/login'} >
+          <button className='bg-gray-600 px-2 py-1 rounded-md text-sm text-white mx-2'>Login</button>
+        </Link>}
         <TiShoppingCart onClick={toggleCart}  className='text-xl md:text-3xl'/>
       </div>
+
       <div ref = {ref} className={`w-72 sideCart overflow-y-scroll absolute top-0 right-0 bg-gray-100 px-10 py-10 transform transition-transform ${Object.keys(cart).length !== 0 ? 'translate-x-0': 'translate-x-full'} h-[100vh] z-50`}>
         <div className="font-bold text-x text-center">Shopping Cart</div>
         <span onClick={toggleCart} className='absolute top-2 right-2 cursor-pointer text-2xl'><AiFillCloseCircle/></span>

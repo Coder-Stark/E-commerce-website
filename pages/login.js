@@ -33,6 +33,7 @@ const Login = () => {
     setEmail("");
     setPassword("");
     if(response.success){
+      localStorage.setItem('token',response.token)
       toast.success('You are successfully logged in', { position: "top-left", autoClose: 1000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "light",});
       setTimeout(()=>{
         router.push('http://localhost:3000')
