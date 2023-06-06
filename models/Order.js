@@ -28,5 +28,5 @@ const OrderSchema = new mongoose.Schema({
         required: true
     }
 },{timestamps: true});
-
+mongoose.models={}
 export default mongoose.model("Order", OrderSchema)

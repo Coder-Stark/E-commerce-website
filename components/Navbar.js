@@ -35,8 +35,8 @@ const Navbar = ({Logout, user ,cart, addToCart, removeFromCart, clearCart, subTo
         </ul> 
       </div>
       <div className="cart items-center absolute top-1 right-0 mx-5 cursor-pointer flex ">
-        <a onMouseOver={()=>{setDropdown(true)}} onMouseLeave={()=>{setDropdown(false)}} >
-      {dropdown && <div onMouseOver={()=>{setDropdown(true)}} onMouseLeave={()=>{setDropdown(false)}} className="absolute right-5 bg-gray-600 top-7 rounded-md px-5 w-36">
+        <span onMouseOver={()=>{setDropdown(true)}} onMouseLeave={()=>{setDropdown(false)}} >
+      {dropdown && <div onMouseOver={()=>{setDropdown(true)}} onMouseLeave={()=>{setDropdown(false)}} className="absolute right-5 bg-gray-600 shadow-lg top-4 md:top-7 rounded-md px-5 w-36">
         <ul>
           <Link href={"/myaccount"}><li className='py-1 hover:text-white textsm'>My Account</li></Link>
           <Link href={"/orders"}><li className='py-1 hover:text-white textsm'>Orders</li></Link>
@@ -44,7 +44,7 @@ const Navbar = ({Logout, user ,cart, addToCart, removeFromCart, clearCart, subTo
         </ul>
       </div>}
       {user.value && <MdAccountCircle className='text-xl md:text-3xl'/>}
-      </a>
+      </span>
         {!user.value && <Link href={'/login'} >
           <button className='bg-gray-600 px-2 py-1 rounded-md text-sm text-white mx-2'>Login</button>
         </Link>}

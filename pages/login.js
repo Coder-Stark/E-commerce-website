@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from "next/link";
 import { useRouter } from 'next/router';
 import { ToastContainer, toast } from 'react-toastify';
@@ -6,8 +6,14 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const router = useRouter();
-  const [email, setEmail] = useState()
-  const [password, setPassword] = useState()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  useEffect(()=>{
+    if(localStorage.getItem('token')){
+      router.push('/');
+    }
+  },[])
   
   const handleChange = (e)=>{
     if(e.target.name == 'email'){
@@ -21,7 +27,7 @@ const Login = () => {
     e.preventDefault();
     const data = {email, password}
     
-    let res = await fetch("http://localhost:3000/api/login" , {
+    let res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/login` , {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +42,7 @@ const Login = () => {
       localStorage.setItem('token',response.token)
       toast.success('You are successfully logged in', { position: "top-left", autoClose: 1000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "light",});
       setTimeout(()=>{
-        router.push('http://localhost:3000')
+        router.push(process.env.NEXT_PUBLIC_HOST)
       },1000)
     }
     else{
@@ -57,7 +63,6 @@ const Login = () => {
       </p>
     </div>
     <form onSubmit={handleSubmit} className="mt-8 space-y-6" method="POST">
-      <input type="hidden" name="remember" value="true"/>
       <div className="-space-y-px rounded-md shadow-sm">
         <div>
           <label htmlFor="email" className="sr-only">Email address</label>
@@ -70,11 +75,6 @@ const Login = () => {
       </div>
 
       <div className="flex items-center justify-between">
-        <div className="flex items-center">
-          <input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4 rounded border-gray-300 text-gray-600 focus:ring-gray-600"/>
-          <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">Remember me</label>
-        </div>
-
         <div className="text-sm">
           <Link legacyBehavior href={'/Forgot'}><a href="#" className="font-medium text-gray-600 hover:text-gray-500">Forgot your password?</a></Link>
         </div>

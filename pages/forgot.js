@@ -1,8 +1,15 @@
 import React from 'react'
 import Link from "next/link";
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
-
-const htmlForgot = () => {
+const Forgot = () => {
+  const router = useRouter();
+  useEffect(()=>{
+    if(localStorage.getItem('token')){
+      router.push('/');
+    }
+  },[])
     return (
         <div>
           <div className="flex min-h-full items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
@@ -41,4 +48,4 @@ const htmlForgot = () => {
       );
 }
 
-export default htmlForgot
+export default Forgot

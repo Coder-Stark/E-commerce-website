@@ -1,17 +1,26 @@
-import Footer from '@/components/Footer'
-import Navbar from '@/components/Navbar'
-import '@/styles/globals.css'
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react'
+import Footer from '@/components/Footer'
+import Navbar from '@/components/Navbar'
+import LoadingBar from 'react-top-loading-bar'
+import '@/styles/globals.css'
 
 export default function App({ Component, pageProps }) {
   const [cart, setCart] = useState({});
   const [subTotal, setSubTotal] = useState(0);
   const [user,setUser] = useState({value:null});
-  const [key, setKey] = useState(0); 
-  const router = useRouter()
+  const [key, setKey] = useState(); 
+  const router = useRouter();
+  const [progress, setProgress] = useState(0)
 
   useEffect(()=>{
+    router.events.on('routeChangeStart', ()=>{
+      setProgress(40);
+    })
+    router.events.on('routeChangeComplete', ()=>{
+      setProgress(100);
+    })
+
     console.log("hey i am a useEffect from _app.js")
     try {
       if(localStorage.getItem('cart')){
@@ -33,6 +42,7 @@ export default function App({ Component, pageProps }) {
     localStorage.removeItem("token");
     setUser({value:null})
     setKey(Math.random());
+    router.push('/');
   }
   const saveCart=(myCart)=>{
     localStorage.setItem('cart',JSON.stringify(myCart))
@@ -81,7 +91,8 @@ export default function App({ Component, pageProps }) {
   }
   return (
     <>
-      <Navbar Logout={logout} user={user} key={key} cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subTotal = {subTotal}/>
+      <LoadingBar color='#757575' progress={progress} onLoaderFinished={() => setProgress(0)} waitingTime={400}/>
+      {key && <Navbar Logout={logout} user={user} key={key} cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subTotal = {subTotal}/>}
       <Component buyNow={buyNow} {...pageProps} cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subTotal = {subTotal} />
       <Footer/>
     </>
