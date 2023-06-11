@@ -1,10 +1,34 @@
 import { resolve } from "path";
+import Order from "@/models/Order"
+import connectDb from "@/middleware/mongoose"
 
 const https = require("https");
 const PaytmChecksum = require('paytmchecksum');
 
-export default async function handler(req, res) {
+const handler = async (req,res)=>{
   if (req.method == "POST") {
+    
+        //check if the cart is tampered with 
+    
+        //check if the cart items are out of stock
+
+        //check if the details are valid
+
+
+    //initiate an order corresponding to this order id
+    let order = new Order({
+      email : req.body.email,
+      orderId : req.body.oid,
+      address:req.body.address,
+      amount:req.body.subTotal,
+      products:req.body.cart
+    })
+    await order.save();
+
+
+
+
+
     //insert an entry int the orders table with status as pending
     var paytmParams = {};
 
@@ -36,7 +60,7 @@ export default async function handler(req, res) {
             var options = {
               hostname: "securegw.paytm.in",
               port: 443,
-              path: `/theia/api/v1/initiateTransaction?mid=${NEXT_PUBLIC_PAYTM_MID}&orderId=${req.body.oid}`,
+              path: `/theia/api/v1/initiateTransaction?mid=${process.env.NEXT_PUBLIC_PAYTM_MID}&orderId=${req.body.oid}`,
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -51,7 +75,7 @@ export default async function handler(req, res) {
               });
       
               post_res.on("end", function () {
-                console.log("Response: ", response);
+                // console.log("Response: ", response);
                 resolve(JSON.parse(response).body);
               });
             });
@@ -64,3 +88,6 @@ export default async function handler(req, res) {
       res.status(200).json(myr);
   }
 }
+
+
+export default connectDb(handler);

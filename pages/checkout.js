@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link';
 import { AiOutlineMinusSquare, AiOutlinePlusSquare } from 'react-icons/ai';
 import {MdShoppingCartCheckout} from 'react-icons/md'
@@ -6,10 +6,44 @@ import Head from 'next/head';
 import Script from 'next/script';
 
 const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
+  const [name,setName] = useState('');
+  const [email,setEmail] = useState('');
+  const [address,setAddress] = useState('');
+  const [phone,setPhone] = useState('');
+  const [pincode,setPincode] = useState('');
+  const [state,setState] = useState('');
+  const [city,setCity] = useState('');
+  const [disabled,setDisabled] = useState(true)
+  const handleChange = (e)=>{
+    if(e.target.name == 'name'){
+      setName(e.target.value);
+    }
+    else if(e.target.name == 'email'){
+      setEmail(e.target.value);
+    }
+    else if(e.target.name == 'address'){
+      setAddress(e.target.value);
+    }
+    else if(e.target.name == 'phone'){
+      setPhone(e.target.value);
+    }
+    else if(e.target.name == 'pincode'){
+      setPincode(e.target.value);
+    }
+    setTimeout(()=>{
+      if(name.length > 3 && email.length > 3 && phone.length > 3 && address.length > 3 && pincode.length > 3){
+        setDisabled(false);
+      }
+      else{
+        setDisabled(true);
+      }
+    },100)
+  }
+
   const initiatePayment = async()=>{
     let oid = Math.floor(Math.random() * Date.now());
     //Get a transaction token
-    const data = { cart, subTotal , oid, email :'email'};
+    const data = { cart, subTotal , oid, email : email, name, addresss, pincode, phone};
 
     let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pretransaction`,{
       method: "POST", // or 'PUT'
@@ -19,7 +53,7 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
       body: JSON.stringify(data),
     })
     let txnRes = await a.json();
-    console.log(txnRes); 
+    // console.log(txnRes); 
     let txnToken = txnRes.txnToken;
       
     var config = {
@@ -60,33 +94,33 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="name" className="leading-7 text-sm text-gray-600">Name</label>
-            <input type="text" id="name" name="name" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            <input onChange={handleChange} value={name} type="text" id="name" name="name" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
           </div>
         </div>
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="email" className="leading-7 text-sm text-gray-600">Email</label>
-            <input type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            <input onChange={handleChange} value={email} type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
           </div>
         </div>
       </div>
         <div className="px-2 w-full">
           <div className=" mb-4">
             <label htmlFor="address" className="leading-7 text-sm text-gray-600">Address</label>
-            <textarea name="address" id="address" cols="30" rows="2" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"></textarea>
+            <textarea onChange={handleChange} value={address}  name="address" id="address" cols="30" rows="2" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"></textarea>
           </div>
         </div>
       <div className="mx-auto flex">
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="phone" className="leading-7 text-sm text-gray-600">Phone</label>
-            <input type="phone" id="phone" name="phone" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            <input  onChange={handleChange} value={phone} type="phone" id="phone" name="phone" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
           </div>
         </div>
         <div className="px-2 w-1/2">
           <div className=" mb-4">
-            <label htmlFor="city" className="leading-7 text-sm text-gray-600">City</label>
-            <input type="text" id="city" name="city" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            <label htmlFor="pincode" className="leading-7 text-sm text-gray-600">PinCode</label>
+            <input onChange={handleChange} value={pincode} type="text" id="pincode" name="pincode" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
           </div>
         </div>
       </div>
@@ -94,13 +128,13 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="state" className="leading-7 text-sm text-gray-600">State</label>
-            <input type="text" id="state" name="state" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            <input value={state} type="text" id="state" name="state" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" readOnly={true}/>
           </div>
         </div>
         <div className="px-2 w-1/2">
           <div className=" mb-4">
-            <label htmlFor="pincode" className="leading-7 text-sm text-gray-600">PinCode</label>
-            <input type="text" id="pincode" name="pincode" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            <label htmlFor="city" className="leading-7 text-sm text-gray-600">City</label>
+            <input value={city} type="text" id="city" name="city" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" readOnly={true}/>
           </div>
         </div>
       </div>
@@ -119,7 +153,7 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
         <span className='font-bold'>Subtotal: ₹{subTotal}</span>
       </div>
       <div className="mx-4">
-          <Link href={'/checkout'}><button  onClick={initiatePayment} className="flex mr-6 px-1 text-white bg-gray-500 border-0  focus:outline-none hover:bg-gray-600 rounded text-md  items-center"><MdShoppingCartCheckout className='m-1'/>Pay ₹{subTotal}</button></Link>
+          <Link href={'/checkout'}><button disabled={disabled}  onClick={initiatePayment} className="disabled:bg-gray-300 flex mr-6 px-1 text-white bg-gray-500 border-0  focus:outline-none hover:bg-gray-600 rounded text-md  items-center"><MdShoppingCartCheckout className='m-1'/>Pay ₹{subTotal}</button></Link>
       </div>
     </div>
   )
