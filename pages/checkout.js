@@ -4,6 +4,8 @@ import { AiOutlineMinusSquare, AiOutlinePlusSquare } from 'react-icons/ai';
 import {MdShoppingCartCheckout} from 'react-icons/md'
 import Head from 'next/head';
 import Script from 'next/script';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
   const [name,setName] = useState('');
@@ -14,10 +16,12 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
   const [state,setState] = useState('');
   const [city,setCity] = useState('');
   const [disabled,setDisabled] = useState(true)
-  const handleChange = (e)=>{
+  const handleChange = async(e)=>{
+    
+
     if(e.target.name == 'name'){
       setName(e.target.value);
-    }
+    } 
     else if(e.target.name == 'email'){
       setEmail(e.target.value);
     }
@@ -29,6 +33,22 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
     }
     else if(e.target.name == 'pincode'){
       setPincode(e.target.value);
+      if(e.target.value == 6){
+        let pins = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`)
+        let pinJson = await pins.json();
+        if(Object.keys(pinJson).includes(e.target.value)){
+          setState(pinJson[e.target.value][0]);
+          setCity(pinJson[e.target.value][1]);
+        }
+        else{
+          setState('');
+          setCity('');
+        }
+      }
+      else{
+        setState('');
+        setCity('');
+      }
     }
     setTimeout(()=>{
       if(name.length > 3 && email.length > 3 && phone.length > 3 && address.length > 3 && pincode.length > 3){
@@ -53,6 +73,7 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
       body: JSON.stringify(data),
     })
     let txnRes = await a.json();
+    if(txnRes.success){
     // console.log(txnRes); 
     let txnToken = txnRes.txnToken;
       
@@ -80,10 +101,35 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
     }).catch(function onError(error){
         console.log("error => ",error);
     });
-
+    }
+    else{
+      console.log(txnRes.error);
+      toast.error(txnRes.error, {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   }
   return (
     <div className='container px-2 m-auto'>
+      <ToastContainer
+      position="top-left"
+      autoClose={5000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="light"
+      />
 
       <Head><meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0"/></Head>
       <Script type="application/javascript" crossorigin="anonymous" src={`${process.env.NEXT_PUBLIC_PAYTM_HOST}/merchantpgpui/checkoutjs/merchants/${process.env.NEXT_PUBLIC_PAYTM_MID}.js`}/>
@@ -128,13 +174,13 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="state" className="leading-7 text-sm text-gray-600">State</label>
-            <input value={state} type="text" id="state" name="state" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" readOnly={true}/>
+            <input onChange={handleChange} value={state} type="text" id="state" name="state" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
           </div>
         </div>
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="city" className="leading-7 text-sm text-gray-600">City</label>
-            <input value={city} type="text" id="city" name="city" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" readOnly={true}/>
+            <input onChange={handleChange} value={city} type="text" id="city" name="city" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
           </div>
         </div>
       </div>

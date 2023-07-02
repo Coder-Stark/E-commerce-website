@@ -1,6 +1,7 @@
 import { resolve } from "path";
 import Order from "@/models/Order"
 import connectDb from "@/middleware/mongoose"
+import Product from '@/models/Product'
 
 const https = require("https");
 const PaytmChecksum = require('paytmchecksum');
@@ -9,6 +10,21 @@ const handler = async (req,res)=>{
   if (req.method == "POST") {
     
         //check if the cart is tampered with 
+        let product, sumTotal = 0;
+        let cart = req.body.cart; 
+        for(item in cart){
+          console.log(item);
+          sumTotal += cart[item].price * cart[item].qty;
+          product = await Product.findOne({slug:item});
+          if(product.price != cart[item].price){
+            res.status(200).json({success: false, "error": "The Price of some items in your cart have changed. Please try again"});
+            return;
+          }
+        }
+        if(sumTotal !== req.body.subTotal){
+          res.status(200).json({success : false, "error": "The Price of some items in your cart have changed. Please try again"});
+          return;
+        }
     
         //check if the cart items are out of stock
 
@@ -76,7 +92,9 @@ const handler = async (req,res)=>{
       
               post_res.on("end", function () {
                 // console.log("Response: ", response);
-                resolve(JSON.parse(response).body);
+                let ress = JSON.parse(response).body;
+                ress.success = true;
+                resolve(ress);
               });
             });
       

@@ -22,9 +22,9 @@ const Navbar = ({Logout, user ,cart, addToCart, removeFromCart, clearCart, subTo
   }
   const ref = useRef();
   return (
-    <div className='flex flex-col md:flex-row md:justify-start justify-center items-center my-2 shadow-md sticky top-0 z-10 bg-white'>
+    <div className='flex flex-col md:flex-row md:justify-start justify-center items-center my-2 shadow-md sticky top-0 z-10' style={{ backgroundColor: '#68019A' }}>
       <div className="logo mr-auto md:mx-5">
-        <Link href={'/'}><Image width={200} height={40} src="/logo.png" alt="" /></Link>
+      <Link href={'/'}><Image width={100} height={10} src="/logo.png" alt="" /></Link>
       </div>
       <div className="nav">
         <ul className='flex items-center space-x-8 font-bold md:text-md'>
