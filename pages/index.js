@@ -1,100 +1,161 @@
 import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "next/font/google";
-
+import { useEffect, useRef } from "react";
+import Navbar from "@/components/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const carouselRef = useRef(null);
+  let currentSlide = 0;
+  let intervalId = null;
+  const slideInterval = 5000; // Interval between slides in milliseconds
+
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    const carouselItems = carousel.querySelectorAll("[data-carousel-item]");
+    const carouselIndicators = carousel.querySelectorAll("[data-carousel-slide-to]");
+    const carouselPrevBtn = carousel.querySelector("[data-carousel-prev]");
+    const carouselNextBtn = carousel.querySelector("[data-carousel-next]");
+
+    const showSlide = (index) => {
+      carouselItems.forEach((item, i) => {
+        if (i === index) {
+          item.classList.remove("hidden");
+        } else {
+          item.classList.add("hidden");
+        }
+      });
+
+      carouselIndicators.forEach((indicator, i) => {
+        if (i === index) {
+          indicator.setAttribute("aria-current", "true");
+        } else {
+          indicator.setAttribute("aria-current", "false");
+        }
+      });
+    };
+
+    const nextSlide = () => {
+      currentSlide = (currentSlide + 1) % carouselItems.length;
+      showSlide(currentSlide);
+    };
+
+    const prevSlide = () => {
+      currentSlide = (currentSlide - 1 + carouselItems.length) % carouselItems.length;
+      showSlide(currentSlide);
+    };
+
+    const startSlideShow = () => {
+      intervalId = setInterval(() => {
+        nextSlide();
+      }, slideInterval);
+    };
+
+    const stopSlideShow = () => {
+      clearInterval(intervalId);
+    };
+
+    carouselPrevBtn.addEventListener("click", () => {
+      prevSlide();
+      stopSlideShow();
+    });
+
+    carouselNextBtn.addEventListener("click", () => {
+      nextSlide();
+      stopSlideShow();
+    });
+
+    // Start the slideshow when the component mounts
+    startSlideShow();
+
+    // Stop the slideshow when the component unmounts
+    return () => {
+      stopSlideShow();
+    };
+  }, []);
+
   return (
     <div>
       <Head>
-        <title>cozycloths.com - Wrap YourSelf in Cozy</title>
-        <meta name="description" content="CozyCloths.com - Wrap Yourself In Cozy"/>
+        <title>cozycloths.com - Wrap Yourself in Cozy</title>
+        <meta name="description" content="CozyCloths.com - Wrap Yourself In Cozy" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div>
-        <img src="/home.jpg" alt="" />
-      </div>
-      <section className="text-gray-600 body-font">
-  <div className="container px-5 py-24 mx-auto">
-    <div className="flex flex-wrap w-full mb-20 flex-col items-center text-center">
-      <h1 className="sm:text-3xl text-2xl font-medium title-font mb-2 text-gray-900">Wrap YourSelf in Cozy with CozyCloths</h1>
-      <p className="lg:w-1/2 w-full leading-relaxed text-gray-500">Wear Whatever you want to !!</p>
-    </div>
-    <div className="flex flex-wrap -m-4">
-      <div className="xl:w-1/3 md:w-1/2 p-4">
-        <div className="border border-gray-200 p-6 rounded-lg">
-          <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-black-100 text-black-500 mb-4">
-            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-6 h-6" viewBox="0 0 24 24">
-              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-            </svg>
+      <div id="default-carousel" className="relative w-full" data-carousel="slide" ref={carouselRef}>
+        {/* Carousel wrapper */}
+        <div className="relative h-56 overflow-hidden rounded-lg md:h-96">
+          {/* Item 1 */}
+          <div className="hidden duration-700 ease-in-out" data-carousel-item>
+            <img src="/home1.jpg" className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="..." />
           </div>
-          <h2 className="text-lg text-gray-900 font-medium title-font mb-2">Shooting Stars</h2>
-          <p className="leading-relaxed text-base">Fingerstache flexitarian street art 8-bit waist co, subway tile poke farm.</p>
+          {/* Item 2 */}
+          <div className="hidden duration-700 ease-in-out" data-carousel-item>
+            <img src="/home2.jpeg" className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="..." />
+          </div>
+          {/* Item 3 */}
+          <div className="hidden duration-700 ease-in-out" data-carousel-item>
+            <img src="/home3.jpg" className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="..." />
+          </div>
+          {/* Item 4 */}
+          <div className="hidden duration-700 ease-in-out" data-carousel-item>
+            <img src="/home4.jpg" className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="..." />
+          </div>
+
+          {/* Previous button */}
+          <button
+            className="absolute z-10 hidden w-10 h-10 mt-24 text-white transition-colors duration-300 bg-gray-800 rounded-full left-2/3 -translate-x-1/2 -translate-y-1/2 top-1/2 md:-translate-y-1/2 md:left-1/12 md:top-1/2 md:-translate-x-1/2 hover:bg-gray-600 hover:text-gray-300 focus:outline-none"
+            aria-label="Previous"
+            data-carousel-prev
+          >
+            <span className="sr-only">Previous</span>
+            <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          {/* Next button */}
+          <button
+            className="absolute z-10 hidden w-10 h-10 mt-24 text-white transition-colors duration-300 bg-gray-800 rounded-full right-2/3 -translate-x-1/2 -translate-y-1/2 top-1/2 md:-translate-y-1/2 md:right-1/12 md:top-1/2 md:-translate-x-1/2 hover:bg-gray-600 hover:text-gray-300 focus:outline-none"
+            aria-label="Next"
+            data-carousel-next
+          >
+            <span className="sr-only">Next</span>
+            <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          {/* Indicators */}
+          <ol className="absolute z-10 hidden space-x-2 text-gray-300 bottom-2 right-1/2 -translate-x-1/2 md:-translate-x-1/2 md:bottom-4">
+            <li
+              className="inline-block w-3 h-3 transition-colors duration-200 rounded-full cursor-pointer"
+              data-carousel-slide-to="0"
+              aria-current="true"
+            ></li>
+            <li
+              className="inline-block w-3 h-3 transition-colors duration-200 rounded-full cursor-pointer"
+              data-carousel-slide-to="1"
+              aria-current="false"
+            ></li>
+            <li
+              className="inline-block w-3 h-3 transition-colors duration-200 rounded-full cursor-pointer"
+              data-carousel-slide-to="2"
+              aria-current="false"
+            ></li>
+            <li
+              className="inline-block w-3 h-3 transition-colors duration-200 rounded-full cursor-pointer"
+              data-carousel-slide-to="3"
+              aria-current="false"
+            ></li>
+          </ol>
         </div>
       </div>
-      <div className="xl:w-1/3 md:w-1/2 p-4">
-        <div className="border border-gray-200 p-6 rounded-lg">
-          <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-black-100 text-black-500 mb-4">
-            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-6 h-6" viewBox="0 0 24 24">
-              <circle cx="6" cy="6" r="3"></circle>
-              <circle cx="6" cy="18" r="3"></circle>
-              <path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12"></path>
-            </svg>
-          </div>
-          <h2 className="text-lg text-gray-900 font-medium title-font mb-2">The Catalyzer</h2>
-          <p className="leading-relaxed text-base">Fingerstache flexitarian street art 8-bit waist co, subway tile poke farm.</p>
-        </div>
-      </div>
-      <div className="xl:w-1/3 md:w-1/2 p-4">
-        <div className="border border-gray-200 p-6 rounded-lg">
-          <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-black-100 text-black-500 mb-4">
-            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-6 h-6" viewBox="0 0 24 24">
-              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-          </div>
-          <h2 className="text-lg text-gray-900 font-medium title-font mb-2">Neptune</h2>
-          <p className="leading-relaxed text-base">Fingerstache flexitarian street art 8-bit waist co, subway tile poke farm.</p>
-        </div>
-      </div>
-      <div className="xl:w-1/3 md:w-1/2 p-4">
-        <div className="border border-gray-200 p-6 rounded-lg">
-          <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-black-100 text-black-500 mb-4">
-            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-6 h-6" viewBox="0 0 24 24">
-              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"></path>
-            </svg>
-          </div>
-          <h2 className="text-lg text-gray-900 font-medium title-font mb-2">Melanchole</h2>
-          <p className="leading-relaxed text-base">Fingerstache flexitarian street art 8-bit waist co, subway tile poke farm.</p>
-        </div>
-      </div>
-      <div className="xl:w-1/3 md:w-1/2 p-4">
-        <div className="border border-gray-200 p-6 rounded-lg">
-          <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-black-100 text-black-500 mb-4">
-            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-6 h-6" viewBox="0 0 24 24">
-              <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
-            </svg>
-          </div>
-          <h2 className="text-lg text-gray-900 font-medium title-font mb-2">Bunker</h2>
-          <p className="leading-relaxed text-base">Fingerstache flexitarian street art 8-bit waist co, subway tile poke farm.</p>
-        </div>
-      </div>
-      <div className="xl:w-1/3 md:w-1/2 p-4">
-        <div className="border border-gray-200 p-6 rounded-lg">
-          <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-black-100 text-black-500 mb-4">
-            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-6 h-6" viewBox="0 0 24 24">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-            </svg>
-          </div>
-          <h2 className="text-lg text-gray-900 font-medium title-font mb-2">Ramona Falls</h2>
-          <p className="leading-relaxed text-base">Fingerstache flexitarian street art 8-bit waist co, subway tile poke farm.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+
+      <style jsx>{`
+        /* Styles for the carousel */
+      `}</style>
     </div>
   );
 }

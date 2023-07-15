@@ -9,18 +9,18 @@ const Orders = () => {
   const [orders, setOrders] = useState([]);
   useEffect(()=>{
     const fetchOrders = async()=>{
-      let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/myoreders`,{
+      let a = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/myorders`,{
         method: "POST", // or 'PUT'
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({token : localStorage.getItem('token')}),
+        body: JSON.stringify({token : JSON.parse(localStorage.getItem('myuser')).token}),
       })
       let res = await a.json();
       setOrders(res.orders);
       console.log(res);
     }
-    if(!localStorage.getItem('token')){
+    if(!localStorage.getItem('myuser')){
       router.push('/');
     }
     else{

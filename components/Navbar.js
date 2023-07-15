@@ -22,36 +22,36 @@ const Navbar = ({Logout, user ,cart, addToCart, removeFromCart, clearCart, subTo
   }
   const ref = useRef();
   return (
-    <div className='flex flex-col md:flex-row md:justify-start justify-center items-center my-2 shadow-md sticky top-0 z-10' style={{ backgroundColor: '#68019A' }}>
-      <div className="logo mr-auto md:mx-5">
-      <Link href={'/'}><Image width={100} height={10} src="/logo.png" alt="" /></Link>
+    <div className='flex flex-col md:flex-row md:justify-start justify-center pb-1 items-center shadow-md top-0 z-10 bg-purple-800 '>
+      <div >
+      <Link href={'/'}><Image width={90} height={10} src="/logo.png" alt="" /></Link>
       </div>
       <div className="nav">
         <ul className='flex items-center space-x-8 font-bold md:text-md'>
-          <Link legacyBehavior href={'/tshirts'}><a><li className='hover:text-gray-500'>  Tshirts</li></a></Link>
-          <Link legacyBehavior href={'/hoodies'}><a><li className='hover:text-gray-500'>  Hoodies</li></a></Link>
-          <Link legacyBehavior href={'/stickers'}><a><li className='hover:text-gray-500'>  Stickers</li></a></Link>
-          <Link legacyBehavior href={'/mugs'}><a><li className='hover:text-gray-500'>  Mugs</li></a></Link>
+          <Link legacyBehavior href={'/tshirts'}><a><li className='hover:text-purple-500 hover:underline text-white'>  Tshirts</li></a></Link>
+          <Link legacyBehavior href={'/hoodies'}><a><li className='hover:text-purple-500 hover:underline text-white'>  Hoodies</li></a></Link>
+          <Link legacyBehavior href={'/stickers'}><a><li className='hover:text-purple-500 hover:underline text-white'>  Stickers</li></a></Link>
+          <Link legacyBehavior href={'/mugs'}><a><li className='hover:text-purple-500 hover:underline text-white'>  Mugs</li></a></Link>
         </ul> 
       </div>
       <div className="cart items-center absolute top-1 right-0 mx-5 cursor-pointer flex ">
         <span onMouseOver={()=>{setDropdown(true)}} onMouseLeave={()=>{setDropdown(false)}} >
-      {dropdown && <div onMouseOver={()=>{setDropdown(true)}} onMouseLeave={()=>{setDropdown(false)}} className="absolute right-5 bg-gray-600 shadow-lg top-4 md:top-7 rounded-md px-5 w-36">
+      {dropdown && <div onMouseOver={()=>{setDropdown(true)}} onMouseLeave={()=>{setDropdown(false)}} className="absolute right-5 bg-purple-600 shadow-lg top-4 md:top-7 rounded-md px-5 w-36">
         <ul>
-          <Link href={"/myaccount"}><li className='py-1 hover:text-white textsm'>My Account</li></Link>
-          <Link href={"/orders"}><li className='py-1 hover:text-white textsm'>Orders</li></Link>
-          <li onClick={Logout} className='py-1 hover:text-white textsm'>LogOut</li>
+          <Link href={"/myaccount"}><li className='py-1 hover:text-white textsm '>My Account</li></Link>
+          <Link href={"/orders"}><li className='py-1 hover:text-white textsm '>Orders</li></Link>
+          <li onClick={Logout} className='py-1 hover:text-white textsm '>LogOut</li>
         </ul>
       </div>}
       {user.value && <MdAccountCircle className='text-xl md:text-3xl'/>}
       </span>
         {!user.value && <Link href={'/login'} >
-          <button className='bg-gray-600 px-2 py-1 rounded-md text-sm text-white mx-2'>Login</button>
+          <button className='bg-white px-2 py-1 rounded-md text-sm text-purple-800 mx-2 hover:px-1 hover:py-1 hover:text-lg'>Login</button>
         </Link>}
         <TiShoppingCart onClick={toggleCart}  className='text-xl md:text-3xl'/>
       </div>
 
-      <div ref = {ref} className={`w-72 sideCart overflow-y-scroll absolute top-0 right-0 bg-gray-100 px-10 py-10 transform transition-transform ${Object.keys(cart).length !== 0 ? 'translate-x-0': 'translate-x-full'} h-[100vh] z-50`}>
+      <div ref = {ref} className={`w-72 sideCart overflow-y-scroll absolute top-0 right-0 bg-purple-200 px-10 py-10 transform transition-transform ${Object.keys(cart).length !== 0 ? 'translate-x-0': 'translate-x-full'} h-[100vh] z-50`}>
         <div className="font-bold text-x text-center">Shopping Cart</div>
         <span onClick={toggleCart} className='absolute top-2 right-2 cursor-pointer text-2xl'><AiFillCloseCircle/></span>
         <ol className= 'list-decimal item'>
@@ -65,8 +65,8 @@ const Navbar = ({Logout, user ,cart, addToCart, removeFromCart, clearCart, subTo
         </ol>
         <div className='font-bold my-3'>Subtotal: ₹{subTotal}</div>
         <div className="flex px-1">
-          <Link href={'/checkout'}><button className="flex mr-6 px-1 text-white bg-gray-500 border-0  focus:outline-none hover:bg-gray-600 rounded text-md  items-center"><MdShoppingCartCheckout className='m-1'/>Checkout</button></Link>
-          <button onClick={clearCart} className="flex px-1  text-white bg-gray-500 border-0  focus:outline-none hover:bg-gray-600 rounded text-md items-center">Clear Cart</button>
+          <Link href={'/checkout'}><button className="flex mr-6 px-1 text-white bg-purple-800 border-0  focus:outline-none hover:bg-white hover:text-purple-800 rounded text-md  items-center"><MdShoppingCartCheckout className='m-1'/>Checkout</button></Link>
+          <button onClick={clearCart} className="flex px-1  text-white bg-purple-800 border-0  focus:outline-none hover:bg-white hover:text-purple-800 rounded text-md items-center">Clear Cart</button>
         </div>
       </div>
     </div>
