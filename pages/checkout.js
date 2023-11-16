@@ -3,11 +3,54 @@ import Link from 'next/link';
 import { AiOutlineMinusSquare, AiOutlinePlusSquare } from 'react-icons/ai';
 import {MdShoppingCartCheckout} from 'react-icons/md'
 
+// Function to generate a random order ID (you can use your own logic here)
+const generateOrderId = () => {
+  return 'ORD' + Math.floor(Math.random() * 1000000000);
+};
 const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
   const handleCashOnDelivery = () => {
-    // You can add logic here to handle the Cash on Delivery process
-    // For example, you can show a success message and clear the cart.
-    console.log('Cash on Delivery chosen. Implement your logic here.');
+    // Assuming you have user details and cart items available here
+    const userEmail = ''; // Replace with user's email
+    const userAddress = ''; // Replace with user's address
+    const orderAmount = subTotal; // Assuming order amount is equal to subtotal
+    const selectedProducts = Object.values(cart); // Assuming 'cart' is an object of selected products
+
+    // Generate an order ID
+    const orderId = generateOrderId();
+
+    // Create the order object with required details
+    const orderDetails = {
+      email: userEmail,
+      orderId: orderId,
+      products: selectedProducts,
+      address: userAddress,
+      amount: orderAmount,
+      status: 'Initiated' // Assuming the status is initially set as 'Initiated'
+    };
+     // Send a request to your backend to create the order
+    // You can use fetch or any HTTP library to make a POST request to your backend API endpoint
+    fetch(`${process.env.NEXT_PUBLIC_HOST}/api/create-order`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+        // Add any other necessary headers
+      },
+      body: JSON.stringify(orderDetails)
+    })
+      .then(response => {
+        if (response.ok) {
+          // Order created successfully, perform further actions (e.g., show order details page)
+          console.log('Order created successfully:', orderDetails);
+          // Redirect to order confirmation page or perform necessary actions
+        } else {
+          // Handle error cases if order creation fails
+          console.error('Failed to create order');
+        }
+      })
+      .catch(error => {
+        console.error('Error creating order:', error);
+        // Handle any network errors
+      });
   };
   return (
     <div className='container px-2 m-auto'>
@@ -76,7 +119,11 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
         <span className='font-bold'>Subtotal: ₹{subTotal}</span>
       </div>
       <div className="mx-4">
-          <Link href={'/checkout'}><button  onClick={handleCashOnDelivery} className="flex mr-6 px-1 text-white bg-gray-500 border-0  focus:outline-none hover:bg-gray-600 rounded text-md  items-center"><MdShoppingCartCheckout className='m-1'/>Pay ₹{subTotal}</button></Link>
+          {/* <Link href={'/checkout'}><button  onClick={handleCashOnDelivery} className="flex mr-6 px-1 text-white bg-gray-500 border-0  focus:outline-none hover:bg-gray-600 rounded text-md  items-center"><MdShoppingCartCheckout className='m-1'/>Pay ₹{subTotal}</button></Link> */}
+        <button onClick={handleCashOnDelivery} className="flex mr-6 px-1 text-white bg-gray-500 border-0  focus:outline-none hover:bg-gray-600 rounded text-md  items-center">
+          <MdShoppingCartCheckout className='m-1' />
+          Pay ₹{subTotal}
+        </button>
       </div>
     </div>
   )
