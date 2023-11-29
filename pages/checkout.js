@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link';
 import { AiOutlineMinusSquare, AiOutlinePlusSquare } from 'react-icons/ai';
 import {MdShoppingCartCheckout} from 'react-icons/md'
@@ -8,24 +8,37 @@ const generateOrderId = () => {
   return 'ORD' + Math.floor(Math.random() * 1000000000);
 };
 const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
+  const [customerDetails, setCustomerDetails] = useState({
+    name: '',
+    email: '',
+    address: '',
+    phone: '',
+    city: '',
+    state: '',
+    pincode: '',
+  });
   const handleCashOnDelivery = () => {
-    // Assuming you have user details and cart items available here
-    const userEmail = ''; // Replace with user's email
-    const userAddress = ''; // Replace with user's address
-    const orderAmount = subTotal; // Assuming order amount is equal to subtotal
-    const selectedProducts = Object.values(cart); // Assuming 'cart' is an object of selected products
-
-    // Generate an order ID
+    const { name, email, address, phone, city, state, pincode } = customerDetails;
+    const orderAmount = subTotal;
+    const selectedProducts = Object.values(cart);
     const orderId = generateOrderId();
 
-    // Create the order object with required details
     const orderDetails = {
-      email: userEmail,
-      orderId: orderId,
+      email,
+      orderId,
       products: selectedProducts,
-      address: userAddress,
+      address,
       amount: orderAmount,
-      status: 'Initiated' // Assuming the status is initially set as 'Initiated'
+      status: 'Initiated',
+      customerDetails: {
+        name,
+        email,
+        address,
+        phone,
+        city,
+        state,
+        pincode,
+      },
     };
      // Send a request to your backend to create the order
     // You can use fetch or any HTTP library to make a POST request to your backend API endpoint
@@ -33,7 +46,6 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
-        // Add any other necessary headers
       },
       body: JSON.stringify(orderDetails)
     })
@@ -60,33 +72,64 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="name" className="leading-7 text-sm text-gray-600">Name</label>
-            <input type="text" id="name" name="name" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            <input 
+            type="text" 
+            id="name" 
+            name="name"
+            value={customerDetails.name}
+            onChange={(e) => setCustomerDetails({ ...customerDetails, name: e.target.value })} 
+            className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
           </div>
         </div>
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="email" className="leading-7 text-sm text-gray-600">Email</label>
-            <input type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            value={customerDetails.email}
+            onChange={(e) => setCustomerDetails({ ...customerDetails, email: e.target.value })}
+            className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
           </div>
         </div>
       </div>
         <div className="px-2 w-full">
           <div className=" mb-4">
             <label htmlFor="address" className="leading-7 text-sm text-gray-600">Address</label>
-            <textarea name="address" id="address" cols="30" rows="2" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"></textarea>
+            <textarea 
+            name="address" 
+            id="address" 
+            cols="30" 
+            rows="2"
+            value={customerDetails.address}
+            onChange={(e) => setCustomerDetails({ ...customerDetails, address: e.target.value })} 
+            className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"></textarea>
           </div>
         </div>
       <div className="mx-auto flex">
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="phone" className="leading-7 text-sm text-gray-600">Phone</label>
-            <input type="phone" id="phone" name="phone" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            <input 
+            type="phone" 
+            id="phone" 
+            name="phone" 
+            value={customerDetails.phone}
+            onChange={(e) => setCustomerDetails({ ...customerDetails, phone: e.target.value })}
+            className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
           </div>
         </div>
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="city" className="leading-7 text-sm text-gray-600">City</label>
-            <input type="text" id="city" name="city" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            <input 
+            type="text" 
+            id="city" 
+            name="city"
+            value={customerDetails.city}
+            onChange={(e) => setCustomerDetails({ ...customerDetails, city: e.target.value })} 
+            className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
           </div>
         </div>
       </div>
@@ -94,17 +137,28 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="state" className="leading-7 text-sm text-gray-600">State</label>
-            <input type="text" id="state" name="state" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            <input 
+            type="text" 
+            id="state" 
+            name="state"
+            value={customerDetails.state}
+            onChange={(e) => setCustomerDetails({ ...customerDetails, state: e.target.value })} 
+            className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
           </div>
         </div>
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="pincode" className="leading-7 text-sm text-gray-600">PinCode</label>
-            <input type="text" id="pincode" name="pincode" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            <input 
+            type="text" 
+            id="pincode" 
+            name="pincode"
+            value={customerDetails.pincode}
+            onChange={(e) => setCustomerDetails({ ...customerDetails, pincode: e.target.value })}
+            className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
           </div>
         </div>
       </div>
-
       <h2 className='semi-bold text-xl'>2. Review Cart Items & Pay</h2>
       <div className=" sideCart  bg-gray-100 p-6 m-2 ">
         <ol className= 'list-decimal item'>
