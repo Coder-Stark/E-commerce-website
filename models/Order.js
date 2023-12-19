@@ -1,16 +1,31 @@
-const mongoose = require('mongoose');
+// order.js
 
-const OrderSchema = new mongoose.Schema({
-    name:{type:String, required: true},
-    email: { type: String, required: true},
-    orderId: { type: String, required: true},
-    paymentInfo: { type: String, default : ''},
-    products: {type:Object, require:true},
-    address: {type: String,required: true},
-    amount: {type: Number,required: true},
-    status: { type: String, default: 'Initiated', required: true}
-},{timestamps: true});
-// mongoose.models={}
-// export default mongoose.model("Order", OrderSchema)
+import mongoose from 'mongoose';
 
-export default mongoose.models.Order || mongoose.model("Order", OrderSchema)
+const orderSchema = new mongoose.Schema({
+  orderId: String,
+  amount: Number,
+  name: String,
+  email: String,
+  address: String,
+  phone : String,
+  city: String,
+  state:  String,
+  pincode: String,
+  products: [{ 
+    productId: String,
+    quantity: Number
+  }],
+  status: {
+    type: String,
+    default: 'Initiated' // You can set a default status if needed
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+const Order = mongoose.model('Order', orderSchema);
+
+export default Order;

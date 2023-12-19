@@ -1,5 +1,5 @@
-import React from 'react'
-import Link from 'next/link';
+import React, { useState } from 'react'
+// import Link from 'next/link';
 import { AiOutlineMinusSquare, AiOutlinePlusSquare } from 'react-icons/ai';
 import {MdShoppingCartCheckout} from 'react-icons/md'
 
@@ -8,50 +8,55 @@ const generateOrderId = () => {
   return 'ORD' + Math.floor(Math.random() * 1000000000);
 };
 const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
-  const handleCashOnDelivery = () => {
-    // Assuming you have user details and cart items available here
-    const userEmail = ''; // Replace with user's email
-    const userAddress = ''; // Replace with user's address
-    const orderAmount = subTotal; // Assuming order amount is equal to subtotal
-    const selectedProducts = Object.values(cart); // Assuming 'cart' is an object of selected products
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [userAddress, setUserAddress] = useState('');
+  const [userPhone, setUserPhone] = useState('');
+  const [userCity, setUserCity] = useState('');
+  const [userState, setUserState] = useState('');
+  const [userPinCode, setUserPinCode] = useState('');
 
-    // Generate an order ID
-    const orderId = generateOrderId();
-
-    // Create the order object with required details
-    const orderDetails = {
-      email: userEmail,
-      orderId: orderId,
-      products: selectedProducts,
-      address: userAddress,
-      amount: orderAmount,
-      status: 'Initiated' // Assuming the status is initially set as 'Initiated'
-    };
-     // Send a request to your backend to create the order
-    // You can use fetch or any HTTP library to make a POST request to your backend API endpoint
-    fetch(`${process.env.NEXT_PUBLIC_HOST}/api/create-order`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-        // Add any other necessary headers
-      },
-      body: JSON.stringify(orderDetails)
-    })
-      .then(response => {
-        if (response.ok) {
-          // Order created successfully, perform further actions (e.g., show order details page)
-          console.log('Order created successfully:', orderDetails);
-          // Redirect to order confirmation page or perform necessary actions
-        } else {
-          // Handle error cases if order creation fails
-          console.error('Failed to create order');
-        }
-      })
-      .catch(error => {
-        console.error('Error creating order:', error);
-        // Handle any network errors
+  const handleCashOnDelivery = async () => {
+    try {
+      const orderAmount = subTotal;
+      const selectedProducts = Object.values(cart);
+      const orderId = generateOrderId();
+  
+      const orderDetails = {
+        name : userName,
+        email: userEmail,
+        address: userAddress,
+        phone: userPhone,
+        city: userCity,
+        state: userState,
+        pinCode: userPinCode,
+        amount: orderAmount,
+        products: selectedProducts,
+        orderId: orderId,
+        status: 'Initiated'
+      };
+  
+      const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/create-order`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+          // Add any other necessary headers
+        },
+        body: JSON.stringify(orderDetails)
       });
+  
+      if (response.ok) {
+        console.log('Order created successfully:', orderDetails);
+        // Redirect to order confirmation page or perform necessary actions
+      } else {
+        console.error('Failed to create order');
+      }
+    } catch (error) {
+      console.error('Error creating order:', error);
+      // Handle any network errors
+    }
   };
+  
   return (
     <div className='container px-2 m-auto'>
       <h1 className='font-bold text-3xl my-8 text-center'>Checkout</h1>
@@ -60,33 +65,33 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="name" className="leading-7 text-sm text-gray-600">Name</label>
-            <input type="text" id="name" name="name" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            <input type="text" id="name" name="name" onChange={(e) => setUserName(e.target.value)} className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
           </div>
         </div>
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="email" className="leading-7 text-sm text-gray-600">Email</label>
-            <input type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            <input type="email" id="email" name="email" onChange={(e) => setUserEmail(e.target.value)} className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
           </div>
         </div>
       </div>
         <div className="px-2 w-full">
           <div className=" mb-4">
             <label htmlFor="address" className="leading-7 text-sm text-gray-600">Address</label>
-            <textarea name="address" id="address" cols="30" rows="2" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"></textarea>
+            <textarea name="address" id="address" cols="30" rows="2" onChange={(e) => setUserAddress(e.target.value)} className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"></textarea>
           </div>
         </div>
       <div className="mx-auto flex">
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="phone" className="leading-7 text-sm text-gray-600">Phone</label>
-            <input type="phone" id="phone" name="phone" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            <input type="tel" id="phone" name="phone" onChange={(e) => setUserPhone(e.target.value)} className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
           </div>
         </div>
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="city" className="leading-7 text-sm text-gray-600">City</label>
-            <input type="text" id="city" name="city" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            <input type="text" id="city" name="city" onChange={(e) => setUserCity(e.target.value)} className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
           </div>
         </div>
       </div>
@@ -94,13 +99,13 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="state" className="leading-7 text-sm text-gray-600">State</label>
-            <input type="text" id="state" name="state" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            <input type="text" id="state" name="state" onChange={(e) => setUserState(e.target.value)} className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
           </div>
         </div>
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="pincode" className="leading-7 text-sm text-gray-600">PinCode</label>
-            <input type="text" id="pincode" name="pincode" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            <input type="number" id="pincode" name="pincode" onChange={(e) => setUserPinCode(e.target.value)} className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
           </div>
         </div>
       </div>
