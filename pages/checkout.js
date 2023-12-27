@@ -1,9 +1,7 @@
-import Link from 'next/link';
 import React, { useState, useEffect } from 'react'
-// import Link from 'next/link';
 import { AiOutlineMinusSquare, AiOutlinePlusSquare } from 'react-icons/ai';
 import {MdShoppingCartCheckout} from 'react-icons/md'
-import MyOrder from './order';
+import { useRouter } from 'next/router';
 
 // Function to generate a random order ID (you can use your own logic here)
 const generateOrderId = () => {
@@ -19,6 +17,7 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
   const [userPinCode, setUserPinCode] = useState('');
   const [disable, setDisable] = useState(true);
 
+  const router = useRouter();
   // Function to handle form submission
   useEffect (()=>{
     if(userName && userEmail && userAddress && userPhone && userCity && userState && userPinCode){
@@ -46,22 +45,23 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
         orderId: orderId,
         status: 'Initiated'
       };
-  
+      
       const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/create-order`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-          // Add any other necessary headers
         },
         body: JSON.stringify(orderDetails)
       });
   
       if (response.ok) {
         console.log('Order created successfully:', orderDetails);
+        router.push(`/order`);
         // Redirect to order confirmation page or perform necessary actions
       } else {
         console.error('Failed to create order');
       }
+
     } catch (error) {
       console.error('Error creating order:', error);
       // Handle any network errors
@@ -135,14 +135,12 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
         <span className='font-bold'>Subtotal: ₹{subTotal}</span>
       </div>
       <div className="mx-4">
-        {/* <Link href={'/order'}>  */}
-          <button disabled={Object.keys(cart).length===0 || disable} 
-            onClick={handleCashOnDelivery}  
-            className="disabled:bg-gray-300 flex mr-6 px-1 text-white bg-gray-500 border-0  focus:outline-none hover:bg-gray-600 rounded text-md  items-center">
-            <MdShoppingCartCheckout className='m-1' />
-            Pay ₹{subTotal}
-          </button>
-        {/* </Link> */}
+        <button disabled={Object.keys(cart).length===0 || disable} 
+          onClick={handleCashOnDelivery}  
+          className="disabled:bg-gray-300 flex mr-6 px-1 text-white bg-gray-500 border-0  focus:outline-none hover:bg-gray-600 rounded text-md  items-center">
+          <MdShoppingCartCheckout className='m-1' />
+          Pay ₹{subTotal}
+        </button>
       </div>
     </div>
   )
