@@ -2,7 +2,7 @@
 
 import mongoose from 'mongoose';
 
-const orderSchema = new mongoose.Schema({
+const OrderSchema = new mongoose.Schema({
   orderId: String,
   amount: Number,
   name: String,
@@ -12,10 +12,7 @@ const orderSchema = new mongoose.Schema({
   city: String,
   state:  String,
   pincode: String,
-  products: [{ 
-    productId: String,
-    quantity: Number
-  }],
+  products: Array,
   status: {
     type: String,
     default: 'Initiated' // You can set a default status if needed
@@ -26,6 +23,4 @@ const orderSchema = new mongoose.Schema({
   }
 });
 
-const Order = mongoose.model('Order', orderSchema);
-
-export default Order;
+export default mongoose.models.Order || mongoose.model('Order', OrderSchema);

@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import Link from 'next/link';
+import React, { useState, useEffect } from 'react'
 // import Link from 'next/link';
 import { AiOutlineMinusSquare, AiOutlinePlusSquare } from 'react-icons/ai';
 import {MdShoppingCartCheckout} from 'react-icons/md'
+import MyOrder from './order';
 
 // Function to generate a random order ID (you can use your own logic here)
 const generateOrderId = () => {
@@ -15,7 +17,16 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
   const [userCity, setUserCity] = useState('');
   const [userState, setUserState] = useState('');
   const [userPinCode, setUserPinCode] = useState('');
+  const [disable, setDisable] = useState(true);
 
+  // Function to handle form submission
+  useEffect (()=>{
+    if(userName && userEmail && userAddress && userPhone && userCity && userState && userPinCode){
+      setDisable(false);
+    }else{
+      setDisable(true);
+    }
+  }, [userName, userEmail, userAddress, userPhone, userCity, userState, userPinCode]);
   const handleCashOnDelivery = async () => {
     try {
       const orderAmount = subTotal;
@@ -124,11 +135,14 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
         <span className='font-bold'>Subtotal: ₹{subTotal}</span>
       </div>
       <div className="mx-4">
-          {/* <Link href={'/checkout'}><button  onClick={handleCashOnDelivery} className="flex mr-6 px-1 text-white bg-gray-500 border-0  focus:outline-none hover:bg-gray-600 rounded text-md  items-center"><MdShoppingCartCheckout className='m-1'/>Pay ₹{subTotal}</button></Link> */}
-        <button onClick={handleCashOnDelivery} className="flex mr-6 px-1 text-white bg-gray-500 border-0  focus:outline-none hover:bg-gray-600 rounded text-md  items-center">
-          <MdShoppingCartCheckout className='m-1' />
-          Pay ₹{subTotal}
-        </button>
+        {/* <Link href={'/order'}>  */}
+          <button disabled={Object.keys(cart).length===0 || disable} 
+            onClick={handleCashOnDelivery}  
+            className="disabled:bg-gray-300 flex mr-6 px-1 text-white bg-gray-500 border-0  focus:outline-none hover:bg-gray-600 rounded text-md  items-center">
+            <MdShoppingCartCheckout className='m-1' />
+            Pay ₹{subTotal}
+          </button>
+        {/* </Link> */}
       </div>
     </div>
   )
