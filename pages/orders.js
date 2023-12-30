@@ -40,7 +40,7 @@ const Orders = () => {
                 <thead className="border-b font-medium dark:border-neutral-500">
                   <tr>
                     <th scope="col" className="px-6 py-4">#Order Id</th>
-                    <th scope="col" className="px-6 py-4">Email</th>
+                    <th scope="col" className="px-6 py-4">Name</th>
                     <th scope="col" className="px-6 py-4">Amount</th>
                     <th scope="col" className="px-6 py-4">Details</th>
                   </tr>
@@ -49,10 +49,10 @@ const Orders = () => {
                   {orders.map((item)=>{
                     return <tr key={item._id} className="border-b dark:border-neutral-500">
                       <td className="whitespace-nowrap px-6 py-4 font-medium">{item.orderId}</td>
-                      <td className="whitespace-nowrap px-6 py-4">{item.email}</td>
+                      <td className="whitespace-nowrap px-6 py-4">{item.name}</td>
                       <td className="whitespace-nowrap px-6 py-4">{item.amount}</td>
                       <td className="whitespace-nowrap px-6 py-4">
-                        <Link href={'/order?id=' + item._id}><a>Details</a></Link>
+                        <Link href={'/order?id=' + item._id}>Details</Link>
                       </td>
                     </tr>
 

@@ -56,7 +56,7 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
   
       if (response.ok) {
         console.log('Order created successfully:', orderDetails);
-        router.push(`/order`);
+        router.push(`/order?id=${_id}`);
         // Redirect to order confirmation page or perform necessary actions
       } else {
         console.error('Failed to create order');
