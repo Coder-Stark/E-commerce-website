@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { AiOutlineMinusSquare, AiOutlinePlusSquare } from 'react-icons/ai';
 import {MdShoppingCartCheckout} from 'react-icons/md'
 import { useRouter } from 'next/router';
+import mongoose from 'mongoose';
 
 // Function to generate a random order ID (you can use your own logic here)
 const generateOrderId = () => {
   return 'ORD' + Math.floor(Math.random() * 1000000000);
 };
-const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
+const Checkout = ({cart,clearCart , subTotal, addToCart, removeFromCart }) => {
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [userAddress, setUserAddress] = useState('');
@@ -55,10 +56,21 @@ const Checkout = ({cart, subTotal, addToCart, removeFromCart }) => {
       });
   
       if (response.ok) {
-        console.log('Order created successfully:', orderDetails);
-        router.push(`/order?id=${_id}`);
+        clearCart();
+        const item = await response.json();
+        console.log('Order created successfully:', item);
+        
+        // Set the _id from the response into orderDetails
+        const orderData = item._id;
+        if(orderData){
+          setTimeout(() => {
+            router.push(`/order?id=` + orderData);
+          }, 1000);
+        }else{
+          console.error('No _id found in response', item);
+        }
         // Redirect to order confirmation page or perform necessary actions
-      } else {
+    } else {
         console.error('Failed to create order');
       }
 

@@ -11,15 +11,19 @@ mongoose.connect(process.env.MONGO_URI, {
 export default async function handler(req, res) {
   try {
     if (req.method === 'POST') {
-      const { name, email, orderId, products, address, amount } = req.body;
+      const { name, email, orderId, products, address, amount, phone, city, state, pincode } = req.body;
 
       const newOrder = new Order({
+        orderId,
+        amount,
         name,
         email,
-        orderId,
-        products,
         address,
-        amount,
+        phone,
+        city,
+        state,
+        pincode,
+        products,
       });
 
       const savedOrder = await newOrder.save();

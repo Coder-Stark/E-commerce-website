@@ -13,7 +13,7 @@ const Footer = () => {
         <Image src="/logo.png" alt="" width={200} height={30} />
       </a>
       </Link>
-      <p className="mt-2 text-sm text-gray-500 px-5">Wrap YourSelf in Cozy with CozyCloths</p>
+      <p className="mt-2 text-sm text-gray-500 px-5">Wrap YourSelf in Cozy with ShopReacter</p>
     </div>
     <div className="flex-grow flex flex-wrap md:pl-20 -mb-10 md:mt-0 mt-10 md:text-left text-center">
       <div className="lg:w-1/4 md:w-1/2 w-full px-4">
@@ -88,7 +88,7 @@ const Footer = () => {
   </div>
   <div className="bg-gray-100">
     <div className="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row">
-      <p className="text-gray-500 text-sm text-center sm:text-left">© 2023 cozycloths.com — All Rights Reserved
+      <p className="text-gray-500 text-sm text-center sm:text-left">© 2024 ShopReacter.com — All Rights Reserved
       </p>
       <span className="inline-flex sm:ml-auto sm:mt-0 mt-2 justify-center sm:justify-start">
         <a className="text-gray-500">

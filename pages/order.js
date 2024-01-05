@@ -1,6 +1,6 @@
 import React from 'react'
 import { useEffect } from 'react'
-import { Router, useRouter } from 'next/router'
+import {useRouter } from 'next/router'
 import Order from '@/models/Order'
 import mongoose from 'mongoose'
 
@@ -19,12 +19,10 @@ const MyOrder = ({order, clearCart}) => {
   <div className="container px-5 py-24 mx-auto">
     <div className="lg:w-4/5 mx-auto flex flex-wrap">
       <div className="lg:w-1/2 w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
-        <h2 className="text-sm title-font text-gray-500 tracking-widest">COZYCLOTHS.COM</h2>
+        <h2 className="text-sm title-font text-gray-500 tracking-widest">SHOPREACTER.COM</h2>
         <h1 className="text-gray-900 text-3xl title-font font-medium mb-4">Order Id : #{order.orderId}</h1>
-        {/* <h1 className="text-gray-900 text-xl md:text-3xl title-font font-medium mb-4">Order Id : #111111111111</h1> */}
         <p className="leading-relaxed mb-4">Yay!! Your Order has been succefully placed !!</p>
         <p> Your Payment status is : <span className='font-semibold text-gray-300'>{order.status}</span></p>
-        {/* <p> Your Payment status is : <span className='font-semibold text-gray-700'>#paid/pending</span></p> */}
         <div className="flex mb-4">
           <a className="flex-grow text-center  py-2 text-lg px-1">Item Description</a>
           <a className="flex-grow text-center border-gray-300 py-2 text-lg px-1">Quantity</a>
@@ -38,28 +36,8 @@ const MyOrder = ({order, clearCart}) => {
             <span className="m-auto text-gray-900">₹{products[key].price}</span>
           </div>
         })}
- {/* -------------------------------------   //to remove ----------------------------------------------------------------------------------------------- */}
-        {/* <div className="flex border-t border-gray-200 py-2">
-          <span className="text-gray-500">Wear the code (XL/Black)</span>
-          <span className="ml-auto text-gray-900">1</span>
-          <span className="ml-auto text-gray-900">₹499</span>
-        </div>
-
-        <div className="flex border-t border-gray-200 py-2">
-          <span className="text-gray-500">Wear the code (XL/Black)</span>
-          <span className="ml-auto text-gray-900">1</span>
-          <span className="ml-auto text-gray-900">₹499</span>
-        </div>
-
-        <div className="flex border-t border-b mb-6 border-gray-200 py-2">
-          <span className="text-gray-500">Wear the code (XL/Black)</span>
-          <span className="ml-auto text-gray-900">1</span>
-          <span className="ml-auto text-gray-900">₹499</span>
-        </div> */}
-{/* ---------------------------------------------------------------------------------------------------------------------------------------------- */}
         <div className="flex">
           <span className="title-font font-medium text-2xl text-gray-900">SubTotal: ₹{order.amount}</span>
-          {/* <span className="title-font font-medium text-2xl text-gray-900">SubTotal: ₹11111</span> */}
         </div>
           <div className='my-6'>
             <button className="flex mx-0 text-white bg-gray-500 border-0 py-2 px-6 focus:outline-none hover:bg-gray-600 rounded">Track Order</button>
