@@ -6,7 +6,7 @@ import mongoose from 'mongoose'
 
 const MyOrder = ({order, clearCart}) => {
   const products = order.products;
-  console.log(order.products);
+  // console.log(order.products);
   const router = useRouter();
   useEffect(()=>{
     if(router.query.clearCart == 1){

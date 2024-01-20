@@ -59,10 +59,10 @@ const Checkout = ({user, cart,clearCart , subTotal, addToCart, removeFromCart })
         window.location.href = `/orders`;
       })
       .catch(error => {
-        console.error('Error:', error);
+        // console.error('Error:', error);
       });
     } catch (error) {
-      console.error('Error creating order:', error);
+      // console.error('Error creating order:', error);
     }
   };
   

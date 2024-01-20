@@ -79,7 +79,7 @@ export async function getServerSideProps(context) {
       }
     }
   }
-  console.log(hoods)
+  // console.log(hoods)
   return {
     props: { products: JSON.parse(JSON.stringify(hoods)) }, // will be passed to the page component as props
   };

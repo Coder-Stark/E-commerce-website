@@ -21,14 +21,14 @@ export default function App({ Component, pageProps }) {
       setProgress(100);
     })
 
-    console.log("hey i am a useEffect from _app.js")
+    // console.log("hey i am a useEffect from _app.js")
     try {
       if(localStorage.getItem('cart')){
         setCart(JSON.parse(localStorage.getItem('cart')))
         saveCart(JSON.parse(localStorage.getItem('cart')))
       }
     } catch (error) {
-      console.error(error);
+      // console.error(error);
       localStorage.clear();
     }
     const myuser = JSON.parse(localStorage.getItem('myuser'));
@@ -83,7 +83,7 @@ export default function App({ Component, pageProps }) {
     newCart[itemCode] = {qty: 1, price,name, size, variant};
     setCart(newCart)
     saveCart(newCart)
-    console.log(newCart);
+    // console.log(newCart);
     router.push('/checkout')
   }
   const clearCart = ()=>{

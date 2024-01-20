@@ -13,7 +13,7 @@ const handler = async (req,res)=>{
         let product, sumTotal = 0;
         let cart = req.body.cart; 
         for(item in cart){
-          console.log(item);
+          // console.log(item);
           sumTotal += cart[item].price * cart[item].qty;
           product = await Product.findOne({slug:item});
           //check if the cart items are out of stock

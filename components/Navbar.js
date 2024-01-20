@@ -9,7 +9,7 @@ import {MdShoppingCartCheckout ,MdAccountCircle} from 'react-icons/md'
 const Navbar = ({Logout, user ,cart, addToCart, removeFromCart, clearCart, subTotal}) => {
   const [dropdown , setDropdown] = useState(false);
 
-  console.log(cart, addToCart, removeFromCart, clearCart, subTotal)
+  // console.log(cart, addToCart, removeFromCart, clearCart, subTotal)
   const toggleCart = ()=>{
     if(ref.current.classList.contains('translate-x-full')){
       ref.current.classList.remove('translate-x-full')
