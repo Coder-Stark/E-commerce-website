@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 const generateOrderId = () => {
   return 'ORD' + Math.floor(Math.random() * 1000000000);
 };
-const Checkout = ({cart,clearCart , subTotal, addToCart, removeFromCart }) => {
+const Checkout = ({user, cart,clearCart , subTotal, addToCart, removeFromCart }) => {
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [userAddress, setUserAddress] = useState('');
@@ -20,12 +20,12 @@ const Checkout = ({cart,clearCart , subTotal, addToCart, removeFromCart }) => {
   const router = useRouter();
   // Function to handle form submission
   useEffect (()=>{
-    if(userName && userEmail && userAddress && userPhone && userCity && userState && userPinCode){
+    if(userName && userAddress && userPhone && userCity && userState && userPinCode){
       setDisable(false);
     }else{
       setDisable(true);
     }
-  }, [userName, userEmail, userAddress, userPhone, userCity, userState, userPinCode]);
+  }, [userName, userAddress, userPhone, userCity, userState, userPinCode]);
   const handleCashOnDelivery = async () => {
     try {
       const orderAmount = subTotal;
@@ -34,7 +34,7 @@ const Checkout = ({cart,clearCart , subTotal, addToCart, removeFromCart }) => {
   
       const orderDetails = {
         name : userName,
-        email: userEmail,
+        email: userEmail || user.email,
         address: userAddress,
         phone: userPhone,
         city: userCity,
@@ -80,7 +80,13 @@ const Checkout = ({cart,clearCart , subTotal, addToCart, removeFromCart }) => {
         <div className="px-2 w-1/2">
           <div className=" mb-4">
             <label htmlFor="email" className="leading-7 text-sm text-gray-600">Email</label>
-            <input type="email" id="email" name="email" onChange={(e) => setUserEmail(e.target.value)} className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            {/* <input type="email" id="email" name="email" onChange={(e) => setUserEmail(e.target.value)} className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/> */}
+            {
+              user.value ? 
+              <input value={user.email} type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" readOnly/>
+              :
+              <input type="email" id="email" name="email" onChange={(e) => setUserEmail(e.target.value)} className="w-full bg-white rounded border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+            }
           </div>
         </div>
       </div>
