@@ -24,7 +24,7 @@ const Navbar = ({Logout, user ,cart, addToCart, removeFromCart, clearCart, subTo
   return (
     <div className='flex flex-col md:flex-row md:justify-start justify-center pb-1 items-center shadow-md top-0 z-10 bg-purple-800 '>
       <div >
-      <Link href={'/'}><Image width={90} height={10} src="/logo.png" alt="" /></Link>
+      <Link href={'/'}><Image style={{margin:10}} width={100} height={10} src="/navlogo.png" alt="" /></Link>
       </div>
       <div className="nav">
         <ul className='flex items-center space-x-8 font-bold md:text-md'>

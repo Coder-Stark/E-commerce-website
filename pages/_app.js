@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react'
+import Head from 'next/head'
 import Footer from '@/components/Footer'
 import Navbar from '@/components/Navbar'
 import LoadingBar from 'react-top-loading-bar'
@@ -92,6 +93,12 @@ export default function App({ Component, pageProps }) {
   }
   return (
     <>
+      <Head>
+        <title>ShopReacter.com</title>
+        <meta name="description" content="ShopReacter.com - Wrap Yourself In Cozy" />
+        <meta name="viewport" content="width=device-width , initial-scale=1.0 , minimum-scale=1.0"/>  
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <LoadingBar color='#FFFFFF' progress={progress} onLoaderFinished={() => setProgress(0)} waitingTime={400}/>
       {key && <Navbar Logout={logout} user={user} key={key} cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subTotal = {subTotal}/>}
       {/* <Component buyNow={buyNow} {...pageProps} cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subTotal = {subTotal} /> */}
